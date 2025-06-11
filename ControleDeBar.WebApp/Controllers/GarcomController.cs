@@ -39,6 +39,26 @@ public class GarcomController : Controller
     [HttpPost("cadastrar")]
     public ActionResult Cadastrar(CadastrarGarcomViewModel cadastrarVM)
     {
+        var registros = repositorioGarcom.SelecionarRegistros();
+
+        foreach (var item in registros)
+        {
+            if (item.Nome.Equals(cadastrarVM.Nome))
+            {
+                ModelState.AddModelError("CadastroUnico", "Já existe um garçom registrado com este nome.");
+                break;
+            }
+
+            if (item.CPF.Equals(cadastrarVM.CPF))
+            {
+                ModelState.AddModelError("CadastroUnico", "Já existe um garçom registrado com este CPF.");
+                break;
+            }
+        }
+
+        if (!ModelState.IsValid)
+            return View(cadastrarVM);
+
         var entidade = cadastrarVM.ParaEntidade();
 
         repositorioGarcom.CadastrarRegistro(entidade);
@@ -63,6 +83,26 @@ public class GarcomController : Controller
     [HttpPost("editar/{id:guid}")]
     public ActionResult Editar(Guid id, EditarGarcomViewModel editarVM)
     {
+        var registros = repositorioGarcom.SelecionarRegistros();
+
+        foreach (var item in registros)
+        {
+            if (!item.Id.Equals(id) && item.Nome.Equals(editarVM.Nome))
+            {
+                ModelState.AddModelError("CadastroUnico", "Já existe um garçom registrado com este nome.");
+                break;
+            }
+
+            if (!item.Id.Equals(id) && item.CPF.Equals(editarVM.CPF))
+            {
+                ModelState.AddModelError("CadastroUnico", "Já existe um garçom registrado com este CPF.");
+                break;
+            }
+        }
+
+        if (!ModelState.IsValid)
+            return View(editarVM);
+
         var entidadeEditada = editarVM.ParaEntidade();
 
         repositorioGarcom.EditarRegistro(id, entidadeEditada);

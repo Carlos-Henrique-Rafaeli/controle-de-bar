@@ -1,6 +1,4 @@
-﻿@using ControleDeBar.WebApp.Models
-
-@model VisualizarGarconsViewModel
+﻿@model VisualizarGarconsViewModel
 
 @{
     Layout = "_Layout";
@@ -26,6 +24,9 @@
                     <p class="card-text"><span class="fw-semibold">CPF:</span> @item.CPF</p>
 
                     <span class="d-flex gap-1 justify-content-end mt-4">
+                        <a href="/garcons/detalhes/@item.Id" class="btn btn-secondary">
+                            <i class="bi bi-search"></i>
+                        </a>
                         <a href="/garcons/editar/@item.Id" class="btn btn-primary">
                             <i class="bi bi-pencil-square"></i>
                         </a>
