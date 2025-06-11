@@ -10,6 +10,7 @@ namespace ControleDeBar.WebApp
 
             var app = builder.Build();
 
+            app.UseAntiforgery();
             app.UseStaticFiles();
             app.UseRouting();
             app.MapDefaultControllerRoute();

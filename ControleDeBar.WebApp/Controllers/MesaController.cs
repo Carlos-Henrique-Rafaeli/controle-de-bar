@@ -39,7 +39,8 @@ public class MesaController : Controller
     }
 
     [HttpPost("cadastrar")]
-    public ActionResult Cadastrar(CadastrarMesaViewModel cadastrarVM)
+    [ValidateAntiForgeryToken]
+    public IActionResult Cadastrar(CadastrarMesaViewModel cadastrarVM)
     {
         var registros = repositorioMesa.SelecionarRegistros();
 
@@ -63,7 +64,7 @@ public class MesaController : Controller
     }
 
     [HttpGet("editar/{id:guid}")]
-    public ActionResult Editar(Guid id)
+    public IActionResult Editar(Guid id)
     {
         var registroSelecionado = repositorioMesa.SelecionarRegistroPorId(id);
 
@@ -77,6 +78,7 @@ public class MesaController : Controller
     }
 
     [HttpPost("editar/{id:guid}")]
+    [ValidateAntiForgeryToken]
     public ActionResult Editar(Guid id, EditarMesaViewModel editarVM)
     {
         var registros = repositorioMesa.SelecionarRegistros();
@@ -101,7 +103,7 @@ public class MesaController : Controller
     }
 
     [HttpGet("excluir/{id:guid}")]
-    public ActionResult Excluir(Guid id)
+    public IActionResult Excluir(Guid id)
     {
         var registroSelecionado = repositorioMesa.SelecionarRegistroPorId(id);
 
@@ -111,7 +113,7 @@ public class MesaController : Controller
     }
 
     [HttpPost("excluir/{id:guid}")]
-    public ActionResult ExcluirConfirmado(Guid id)
+    public IActionResult ExcluirConfirmado(Guid id)
     {
         repositorioMesa.ExcluirRegistro(id);
 
@@ -119,7 +121,7 @@ public class MesaController : Controller
     }
 
     [HttpGet("detalhes/{id:guid}")]
-    public ActionResult Detalhes(Guid id)
+    public IActionResult Detalhes(Guid id)
     {
         var registroSelecionado = repositorioMesa.SelecionarRegistroPorId(id);
 

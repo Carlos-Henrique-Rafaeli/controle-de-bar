@@ -37,7 +37,8 @@ public class GarcomController : Controller
     }
 
     [HttpPost("cadastrar")]
-    public ActionResult Cadastrar(CadastrarGarcomViewModel cadastrarVM)
+    [ValidateAntiForgeryToken]
+    public IActionResult Cadastrar(CadastrarGarcomViewModel cadastrarVM)
     {
         var registros = repositorioGarcom.SelecionarRegistros();
 
@@ -67,7 +68,7 @@ public class GarcomController : Controller
     }
 
     [HttpGet("editar/{id:guid}")]
-    public ActionResult Editar(Guid id)
+    public IActionResult Editar(Guid id)
     {
         var registroSelecionado = repositorioGarcom.SelecionarRegistroPorId(id);
 
@@ -81,7 +82,8 @@ public class GarcomController : Controller
     }
 
     [HttpPost("editar/{id:guid}")]
-    public ActionResult Editar(Guid id, EditarGarcomViewModel editarVM)
+    [ValidateAntiForgeryToken]
+    public IActionResult Editar(Guid id, EditarGarcomViewModel editarVM)
     {
         var registros = repositorioGarcom.SelecionarRegistros();
 
@@ -111,7 +113,7 @@ public class GarcomController : Controller
     }
 
     [HttpGet("excluir/{id:guid}")]
-    public ActionResult Excluir(Guid id)
+    public IActionResult Excluir(Guid id)
     {
         var registroSelecionado = repositorioGarcom.SelecionarRegistroPorId(id);
 
@@ -121,7 +123,7 @@ public class GarcomController : Controller
     }
 
     [HttpPost("excluir/{id:guid}")]
-    public ActionResult ExcluirConfirmado(Guid id)
+    public IActionResult ExcluirConfirmado(Guid id)
     {
         repositorioGarcom.ExcluirRegistro(id);
 
@@ -129,7 +131,7 @@ public class GarcomController : Controller
     }
 
     [HttpGet("detalhes/{id:guid}")]
-    public ActionResult Detalhes(Guid id)
+    public IActionResult Detalhes(Guid id)
     {
         var registroSelecionado = repositorioGarcom.SelecionarRegistroPorId(id);
 
