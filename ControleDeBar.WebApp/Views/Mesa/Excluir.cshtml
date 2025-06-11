@@ -12,10 +12,9 @@
             <div class="card-body p-md-5">
                 <h3>Formulário de Exclusão</h3>
 
-
                 <p class="mt-4">Você deseja realmente excluir a mesa <strong>@Model.Numero</strong>?</p>
 
-                <form action="/mesas/excluir/@Model.Id" method="post">
+                <form asp-action="Excluir">
                     <div class="form-group d-flex align-items-center justify-content-end gap-3 mt-5">
                         <a href="/mesas">Voltar para a listagem</a>
                         <button type="submit" class="btn btn-primary px-5">Confirmar</button>
