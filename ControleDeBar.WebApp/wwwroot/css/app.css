@@ -1,1 +1,19 @@
-﻿body { background-color: #E8ECED; }
+﻿body {
+    background-color: #E8ECED;
+    margin: 0;
+    padding: 0;
+    margin: 0;
+}
+
+.opcao-card {
+    max-width: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+@media (min-width: 1200px) {
+    .coluna-card {
+        max-width: 310px;
+    }
+}

@@ -6,6 +6,7 @@ public class Mesa : EntidadeBase<Mesa>
 {
     public int Numero { get; set; }
     public int Capacidade { get; set; }
+    public bool EstaOcupada { get; set; }
 
     public Mesa() { }
 
@@ -14,6 +15,17 @@ public class Mesa : EntidadeBase<Mesa>
         Id = Guid.NewGuid();
         Numero = numero;
         Capacidade = quantidadeDeAssentos;
+        EstaOcupada = false;
+    }
+
+    public void Ocupar()
+    {
+        EstaOcupada = true;
+    }
+
+    public void Desocupar()
+    {
+        EstaOcupada = false;
     }
 
     public override void AtualizarRegistro(Mesa registroEditado)
