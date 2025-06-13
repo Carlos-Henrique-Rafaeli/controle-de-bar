@@ -48,7 +48,8 @@ public class ExcluirProdutoViewModel
     public Guid Id { get; set; }
     public string Nome { get; set; }
 
-    public ExcluirProdutoViewModel(Guid id, string nome)
+    public ExcluirProdutoViewModel() { }
+    public ExcluirProdutoViewModel(Guid id, string nome) : this()
     {
         Id = id;
         Nome = nome;

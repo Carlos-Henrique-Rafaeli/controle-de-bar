@@ -1,6 +1,8 @@
-﻿using ControleDeBar.Dominio.ModuloMesa;
+﻿using ControleDeBar.Dominio.ModuloConta;
+using ControleDeBar.Dominio.ModuloMesa;
 using ControleDeBar.Infraestrura.Arquivos.Compartilhado;
 using ControleDeBar.Infraestrura.Arquivos.ModuloMesa;
+using ControleDeBar.Infraestrutura.Arquivos.ModuloConta;
 using ControleDeBar.WebApp.Extensions;
 using ControleDeBar.WebApp.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -12,11 +14,13 @@ public class MesaController : Controller
 {
     private readonly ContextoDados contextoDados;
     private readonly IRepositorioMesa repositorioMesa;
+    private readonly IRepositorioConta repositorioConta;
 
     public MesaController()
     {
         contextoDados = new ContextoDados(true);
         repositorioMesa = new RepositorioMesaEmArquivo(contextoDados);
+        repositorioConta = new RepositorioContaEmArquivo(contextoDados);
     }
 
     [HttpGet]
@@ -113,8 +117,26 @@ public class MesaController : Controller
     }
 
     [HttpPost("excluir/{id:guid}")]
-    public IActionResult ExcluirConfirmado(Guid id)
+    public IActionResult Excluir(Guid id, ExcluirMesaViewModel excluirVM)
     {
+        var registros = repositorioConta.SelecionarContas();
+
+        var mesaAtual = repositorioMesa.SelecionarRegistroPorId(id);
+
+        foreach (var i in registros)
+        {
+            if (!i.EstaAberta) continue;
+
+            if (i.Mesa.Equals(mesaAtual))
+            {
+                ModelState.AddModelError("CadastroUnico", "Existe uma conta ativa registrada com esta mesa.");
+                break;
+            }
+        }
+
+        if (!ModelState.IsValid)
+            return View(excluirVM);
+
         repositorioMesa.ExcluirRegistro(id);
 
         return RedirectToAction(nameof(Index));

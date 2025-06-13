@@ -1,9 +1,13 @@
-﻿using ControleDeBar.Dominio.ModuloGarcom;
+﻿using ControleDeBar.Dominio.ModuloConta;
+using ControleDeBar.Dominio.ModuloGarcom;
+using ControleDeBar.Dominio.ModuloMesa;
 using ControleDeBar.Infraestrura.Arquivos.Compartilhado;
+using ControleDeBar.Infraestrutura.Arquivos.ModuloConta;
 using ControleDeBar.Infraestrutura.Arquivos.ModuloGarcom;
 using ControleDeBar.WebApp.Extensions;
 using ControleDeBar.WebApp.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Win32;
 
 namespace ControleDeBar.WebApp.Controllers;
 
@@ -12,11 +16,13 @@ public class GarcomController : Controller
 {
     private readonly ContextoDados contextoDados;
     private readonly IRepositorioGarcom repositorioGarcom;
+    private readonly IRepositorioConta repositorioConta;
 
     public GarcomController()
     {
         contextoDados = new ContextoDados(true);
         repositorioGarcom = new RepositorioGarcomEmArquivo(contextoDados);
+        repositorioConta = new RepositorioContaEmArquivo(contextoDados);
     }
 
     public IActionResult Index()
@@ -123,8 +129,26 @@ public class GarcomController : Controller
     }
 
     [HttpPost("excluir/{id:guid}")]
-    public IActionResult ExcluirConfirmado(Guid id)
+    public IActionResult Excluir(Guid id, ExcluirGarcomViewModel excluirVM)
     {
+        var registros = repositorioConta.SelecionarContas();
+
+        var garcomAtual = repositorioGarcom.SelecionarRegistroPorId(id);
+
+        foreach (var i in registros)
+        {
+            if (!i.EstaAberta) continue;
+
+            if (i.Garcom.Equals(garcomAtual))
+            {
+                ModelState.AddModelError("CadastroUnico", "Existe uma conta ativa registrada com este garçom.");
+                break;
+            }
+        }
+
+        if (!ModelState.IsValid)
+            return View(excluirVM);
+
         repositorioGarcom.ExcluirRegistro(id);
 
         return RedirectToAction(nameof(Index));

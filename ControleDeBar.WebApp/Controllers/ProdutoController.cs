@@ -1,5 +1,8 @@
-﻿using ControleDeBar.Dominio.ModuloProduto;
+﻿using ControleDeBar.Dominio.ModuloConta;
+using ControleDeBar.Dominio.ModuloGarcom;
+using ControleDeBar.Dominio.ModuloProduto;
 using ControleDeBar.Infraestrura.Arquivos.Compartilhado;
+using ControleDeBar.Infraestrutura.Arquivos.ModuloConta;
 using ControleDeBar.Infraestrutura.Arquivos.ModuloProduto;
 using ControleDeBar.WebApp.Extensions;
 using ControleDeBar.WebApp.Models;
@@ -12,11 +15,13 @@ public class ProdutoController : Controller
 {
     private readonly ContextoDados contextoDados;
     private readonly IRepositorioProduto repositorioProduto;
+    private readonly IRepositorioConta repositorioConta;
 
     public ProdutoController()
     {
         contextoDados = new ContextoDados(true);
         repositorioProduto = new RepositorioProdutoEmArquivo(contextoDados);
+        repositorioConta = new RepositorioContaEmArquivo(contextoDados);
     }
 
     [HttpGet]
@@ -112,8 +117,29 @@ public class ProdutoController : Controller
     }
 
     [HttpPost("excluir/{id:guid}")]
-    public IActionResult ExcluirConfirmado(Guid id)
+    public IActionResult Excluir(Guid id, ExcluirProdutoViewModel excluirVM)
     {
+        var registros = repositorioConta.SelecionarContas();
+
+        var produtoAtual = repositorioProduto.SelecionarRegistroPorId(id);
+
+        foreach (var i in registros)
+        {
+            if (!i.EstaAberta) continue;
+
+            foreach (var j in i.Pedidos)
+            {
+                if (j.Produto.Equals(produtoAtual))
+                {
+                    ModelState.AddModelError("CadastroUnico", "Existe uma conta ativa registrada com este produto.");
+                    break;
+                }
+            }
+        }
+
+        if (!ModelState.IsValid)
+            return View(excluirVM);
+
         repositorioProduto.ExcluirRegistro(id);
 
         return RedirectToAction(nameof(Index));

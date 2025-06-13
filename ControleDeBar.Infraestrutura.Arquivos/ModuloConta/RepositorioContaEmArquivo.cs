@@ -1,7 +1,7 @@
 ﻿using ControleDeBar.Dominio.ModuloConta;
 using ControleDeBar.Infraestrura.Arquivos.Compartilhado;
 
-namespace ControleDeBar.Infraestrutura.Arquivos.ModuloContal;
+namespace ControleDeBar.Infraestrutura.Arquivos.ModuloConta;
 
 public class RepositorioContaEmArquivo : IRepositorioConta
 {

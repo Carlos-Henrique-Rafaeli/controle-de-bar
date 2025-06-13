@@ -14,6 +14,17 @@
                 <p class="mt-4">Você deseja realmente excluir o garçom <strong>@Model.Nome</strong>?</p>
 
                 <form asp-action="Excluir" method="post">
+                    <input type="hidden" asp-for="Id" />
+                    <input type="hidden" asp-for="Nome" />
+
+                    @if (ViewData.ModelState["CadastroUnico"]?.Errors.Count > 0)
+                    {
+                        <div class="alert alert-danger alert-dismissible fade show my-3" role="alert">
+                            @ViewData.ModelState["CadastroUnico"]!.Errors.First().ErrorMessage
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+
                     <div class="form-group d-flex align-items-center justify-content-end gap-3 mt-5">
                         <a href="/garcons">Voltar para a listagem</a>
                         <button type="submit" class="btn btn-primary px-5">Confirmar</button>

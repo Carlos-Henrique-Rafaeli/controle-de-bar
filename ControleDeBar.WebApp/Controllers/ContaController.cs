@@ -4,7 +4,7 @@ using ControleDeBar.Dominio.ModuloMesa;
 using ControleDeBar.Dominio.ModuloProduto;
 using ControleDeBar.Infraestrura.Arquivos.Compartilhado;
 using ControleDeBar.Infraestrura.Arquivos.ModuloMesa;
-using ControleDeBar.Infraestrutura.Arquivos.ModuloContal;
+using ControleDeBar.Infraestrutura.Arquivos.ModuloConta;
 using ControleDeBar.Infraestrutura.Arquivos.ModuloGarcom;
 using ControleDeBar.Infraestrutura.Arquivos.ModuloProduto;
 using ControleDeBar.WebApp.Extensions;
@@ -73,6 +73,12 @@ public class ContaController : Controller
             if (conta.Titular.Equals(abrirVM.Titular) && conta.EstaAberta)
             {
                 ModelState.AddModelError("CadastroUnico", "Já existe uma conta aberta para este titular.");
+                break;
+            }
+
+            if (conta.Mesa.EstaOcupada)
+            {
+                ModelState.AddModelError("CadastroUnico", "A mesa selecionada já esta ocupada.");
                 break;
             }
         }
