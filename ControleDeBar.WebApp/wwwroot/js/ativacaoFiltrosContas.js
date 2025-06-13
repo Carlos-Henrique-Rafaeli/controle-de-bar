@@ -10,7 +10,8 @@
         if (
             (status === null && !href.includes("status=")) ||
             (status === "abertas" && href.includes("status=abertas")) ||
-            (status === "fechadas" && href.includes("status=fechadas"))
+            (status === "fechadas" && href.includes("status=fechadas")) ||
+            (status === "faturas" && href.includes("status=faturas"))
         ) {
             btn.classList.remove('btn-outline-primary');
             btn.classList.add('btn-primary');

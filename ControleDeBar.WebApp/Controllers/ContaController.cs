@@ -40,8 +40,11 @@ public class ContaController : Controller
         {
             case "abertas": registros = repositorioConta.SelecionarContasAbertas(); break;
             case "fechadas": registros = repositorioConta.SelecionarContasFechadas(); break;
+            case "faturas": registros = repositorioConta.SelecionarContasFechadas(); break;
             default: registros = repositorioConta.SelecionarContas(); break;
         }
+
+        ViewBag.Status = status;
 
         var visualizarVM = new VisualizarContasViewModel(registros);
 
@@ -160,5 +163,23 @@ public class ContaController : Controller
         var gerenciarPedidosVm = new GerenciarPedidosViewModel(contaSelecionada, produtos);
 
         return View("GerenciarPedidos", gerenciarPedidosVm);
+    }
+
+    [HttpGet("detalhes/{id:guid}")]
+    public IActionResult Detalhes(Guid id)
+    {
+        var registroSelecionado = repositorioConta.SelecionarPorId(id);
+
+        var detalhesVM = new DetalhesContaViewModel(
+            id,
+            registroSelecionado.Titular,
+            registroSelecionado.Mesa.Numero,
+            registroSelecionado.Garcom.Nome,
+            registroSelecionado.EstaAberta,
+            registroSelecionado.CalcularValorTotal(),
+            registroSelecionado.Pedidos
+        );
+
+        return View(detalhesVM);
     }
 }
