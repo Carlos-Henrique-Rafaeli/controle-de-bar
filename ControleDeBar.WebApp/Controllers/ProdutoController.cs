@@ -17,11 +17,14 @@ public class ProdutoController : Controller
     private readonly IRepositorioProduto repositorioProduto;
     private readonly IRepositorioConta repositorioConta;
 
-    public ProdutoController()
+    public ProdutoController(
+        ContextoDados contextoDados, 
+        IRepositorioProduto repositorioProduto, 
+        IRepositorioConta repositorioConta)
     {
-        contextoDados = new ContextoDados(true);
-        repositorioProduto = new RepositorioProdutoEmArquivo(contextoDados);
-        repositorioConta = new RepositorioContaEmArquivo(contextoDados);
+        this.contextoDados = contextoDados;
+        this.repositorioProduto = repositorioProduto;
+        this.repositorioConta = repositorioConta;
     }
 
     [HttpGet]
