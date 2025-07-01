@@ -1,4 +1,5 @@
-﻿using ControleDeBar.Dominio.ModuloMesa;
+﻿using ControleDeBar.Dominio.ModuloConta;
+using ControleDeBar.Dominio.ModuloMesa;
 using ControleDeBar.WebApp.Extensions;
 using System.ComponentModel.DataAnnotations;
 
@@ -76,12 +77,14 @@ public class DetalhesMesaViewModel
     public Guid Id { get; set; }
     public int Numero { get; set; }
     public int Capacidade { get; set; }
+    public Conta Conta { get; set; }
 
-    public DetalhesMesaViewModel(Guid id, int numero, int capacidade)
+    public DetalhesMesaViewModel(Guid id, int numero, int capacidade, Conta conta)
     {
         Id = id;
         Numero = numero;
         Capacidade = capacidade;
+        Conta = conta;
     }
 }
 

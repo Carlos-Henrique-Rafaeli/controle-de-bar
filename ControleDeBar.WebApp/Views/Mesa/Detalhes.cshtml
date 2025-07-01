@@ -25,6 +25,41 @@
                     <label for="Capacidade" class="control-label fs-5">Capacidade:</label>
                     <input name="Capacidade" class="form-control" type="number" value="@Model.Capacidade" readonly disabled />
                 </div>
+
+                <h4 class="my-3">Pedidos</h4>
+
+                @if (Model.Conta is null)
+                {
+                    <p class="fw-semibold mt-3">Não há nenhum pedido relacionado à mesa...</p>
+                }
+                else
+                {
+                    <table class="table table-sm table-striped mt-3">
+                        <thead>
+                            <tr>
+                                <th>Produto</th>
+                                <th>Qtd.</th>
+                                <th>Valor</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var pedido in Model.Conta.Pedidos)
+                            {
+                                <tr>
+                                    <td>@pedido.Produto.Nome</td>
+                                    <td>@pedido.Quantidade</td>
+                                    <td>@pedido.CalcularTotalParcial().ToString("C2")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+
+                    <div class="d-flex justify-content-end mt-3">
+                        <label class="control-label"><strong>Total da Conta:</strong> @Model.Conta.CalcularValorTotal().ToString("C2")</label>
+                    </div>
+                }
+
                 <div class="form-group d-flex align-items-center justify-content-end gap-3 mt-5">
                     <a href="/mesas">Voltar para a listagem</a>
                 </div>

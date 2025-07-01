@@ -147,10 +147,24 @@ public class MesaController : Controller
     {
         var registroSelecionado = repositorioMesa.SelecionarRegistroPorId(id);
 
+        var contas = repositorioConta.SelecionarContas();
+
+        Conta contaSelecionada = null;
+
+        foreach (var i in contas)
+        {
+            if (i.Mesa.Equals(registroSelecionado))
+            {
+                contaSelecionada = i;
+                break;
+            }
+        }
+
         var detalhesVM = new DetalhesMesaViewModel(
             id,
             registroSelecionado.Numero,
-            registroSelecionado.Capacidade
+            registroSelecionado.Capacidade,
+            contaSelecionada
         );
 
         return View(detalhesVM);
