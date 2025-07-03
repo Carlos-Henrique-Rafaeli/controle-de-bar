@@ -16,20 +16,17 @@ namespace ControleDeBar.WebApp.Controllers;
 [Route("contas")]
 public class ContaController : Controller
 {
-    private readonly ContextoDados contextoDados;
     private readonly IRepositorioConta repositorioConta;
     private readonly IRepositorioMesa repositorioMesa;
     private readonly IRepositorioGarcom repositorioGarcom;
     private readonly IRepositorioProduto repositorioProduto;
 
     public ContaController(
-        ContextoDados contextoDados, 
         IRepositorioConta repositorioConta, 
         IRepositorioMesa repositorioMesa, 
         IRepositorioGarcom repositorioGarcom, 
         IRepositorioProduto repositorioProduto)
     {
-        this.contextoDados = contextoDados;
         this.repositorioConta = repositorioConta;
         this.repositorioMesa = repositorioMesa;
         this.repositorioGarcom = repositorioGarcom;
@@ -124,7 +121,7 @@ public class ContaController : Controller
 
         registroSelecionado.Fechar();
 
-        contextoDados.Salvar();
+        repositorioConta.AtualizarConta(registroSelecionado, id);
 
         return RedirectToAction(nameof(Index));
     }
@@ -151,7 +148,7 @@ public class ContaController : Controller
             adicionarPedidoVm.Quantidade
         );
 
-        contextoDados.Salvar();
+        repositorioConta.AdicionarPedido(contaSelecionada.Pedidos.Last());
 
         var produtos = repositorioProduto.SelecionarRegistros();
 
@@ -167,7 +164,7 @@ public class ContaController : Controller
 
         var pedidoRemovido = contaSelecionada.RemoverPedido(idPedido);
 
-        contextoDados.Salvar();
+        repositorioConta.RemoverPedido(pedidoRemovido);
 
         var produtos = repositorioProduto.SelecionarRegistros();
 

@@ -11,7 +11,7 @@ public class Conta : EntidadeBase<Conta>
     public Mesa Mesa { get; set; }
     public Garcom Garcom { get; set; }
     public DateTime Abertura { get; set; }
-    public DateTime Fechamento { get; set; }
+    public DateTime? Fechamento { get; set; }
     public bool EstaAberta { get; set; }
     public List<Pedido> Pedidos { get; set; }
 
@@ -48,7 +48,7 @@ public class Conta : EntidadeBase<Conta>
 
     public Pedido RegistrarPedido(Produto produto, int quantidadeEscolhida)
     {
-        Pedido novoPedido = new Pedido(produto, quantidadeEscolhida);
+        Pedido novoPedido = new Pedido(produto, quantidadeEscolhida, this);
 
         Pedidos.Add(novoPedido);
 

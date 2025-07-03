@@ -3,10 +3,11 @@ using ControleDeBar.Dominio.ModuloGarcom;
 using ControleDeBar.Dominio.ModuloMesa;
 using ControleDeBar.Dominio.ModuloProduto;
 using ControleDeBar.Infraestrura.Arquivos.Compartilhado;
-using ControleDeBar.Infraestrura.Arquivos.ModuloMesa;
 using ControleDeBar.Infraestrutura.Arquivos.ModuloConta;
-using ControleDeBar.Infraestrutura.Arquivos.ModuloGarcom;
-using ControleDeBar.Infraestrutura.Arquivos.ModuloProduto;
+using ControleDeBar.Infraestrutura.SqlServer.ModuloConta;
+using ControleDeBar.Infraestrutura.SqlServer.ModuloGarcom;
+using ControleDeBar.Infraestrutura.SqlServer.ModuloMesa;
+using ControleDeBar.Infraestrutura.SqlServer.ModuloProduto;
 using ControleDeBar.WebApp.ActionFilters;
 using ControleDeBar.WebApp.DependencyInjection;
 
@@ -25,10 +26,10 @@ public class Program
         });
 
         builder.Services.AddScoped<ContextoDados>((_) => new ContextoDados(true));
-        builder.Services.AddScoped<IRepositorioProduto, RepositorioProdutoEmArquivo>();
-        builder.Services.AddScoped<IRepositorioConta, RepositorioContaEmArquivo>();
-        builder.Services.AddScoped<IRepositorioGarcom, RepositorioGarcomEmArquivo>();
-        builder.Services.AddScoped<IRepositorioMesa, RepositorioMesaEmArquivo>();
+        builder.Services.AddScoped<IRepositorioProduto, RepositorioProdutoEmSql>();
+        builder.Services.AddScoped<IRepositorioConta, RepositorioContaEmSql>();
+        builder.Services.AddScoped<IRepositorioGarcom, RepositorioGarcomEmSql>();
+        builder.Services.AddScoped<IRepositorioMesa, RepositorioMesaEmSql>();
 
         builder.Services.AddSerilogConfig(builder.Logging);
 

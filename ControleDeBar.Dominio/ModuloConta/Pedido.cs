@@ -7,14 +7,16 @@ public class Pedido
     public Guid Id { get; set; }
     public Produto Produto { get; set; }
     public int Quantidade { get; set; }
+    public Conta Conta { get; set; }
 
     public Pedido() { }
 
-    public Pedido(Produto produto, int quantidade) : this()
+    public Pedido(Produto produto, int quantidade, Conta conta) : this()
     {
         Id = Guid.NewGuid();
         Produto = produto;
         Quantidade = quantidade;
+        Conta = conta;
     }
 
     public decimal CalcularTotalParcial()

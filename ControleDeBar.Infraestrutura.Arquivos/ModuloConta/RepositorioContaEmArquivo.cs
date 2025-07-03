@@ -3,7 +3,7 @@ using ControleDeBar.Infraestrura.Arquivos.Compartilhado;
 
 namespace ControleDeBar.Infraestrutura.Arquivos.ModuloConta;
 
-public class RepositorioContaEmArquivo : IRepositorioConta
+public class RepositorioContaEmArquivo 
 {
     private readonly ContextoDados contexto;
     protected readonly List<Conta> registros;
