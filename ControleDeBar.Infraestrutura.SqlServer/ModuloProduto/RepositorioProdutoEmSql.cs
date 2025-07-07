@@ -1,11 +1,16 @@
 ﻿using ControleDeBar.Dominio.ModuloProduto;
 using ControleDeBar.Infraestrutura.SqlServer.Compartilhado;
 using Microsoft.Data.SqlClient;
+using System.Data;
 
 namespace ControleDeBar.Infraestrutura.SqlServer.ModuloProduto;
 
 public class RepositorioProdutoEmSql : RepositorioBaseEmSql<Produto>, IRepositorioProduto
 {
+    public RepositorioProdutoEmSql(IDbConnection conexaoComBanco) : base(conexaoComBanco)
+    {
+    }
+
     public override string ObterSqlInserir()
     {
         return @"INSERT INTO [TBPRODUTO] 
@@ -62,14 +67,14 @@ public class RepositorioProdutoEmSql : RepositorioBaseEmSql<Produto>, IRepositor
 		        [TBPRODUTO]";
     }
 
-    public override void ConfigurarParametros(SqlCommand comando, Produto registro)
+    public override void ConfigurarParametrosRegistro(IDbCommand comando, Produto registro)
     {
-        comando.Parameters.AddWithValue("ID", registro.Id);
-        comando.Parameters.AddWithValue("NOME", registro.Nome);
-        comando.Parameters.AddWithValue("PRECO", registro.Valor);
+        comando.AdicionarParametro("ID", registro.Id);
+        comando.AdicionarParametro("NOME", registro.Nome);
+        comando.AdicionarParametro("PRECO", registro.Valor);
     }
 
-    public override Produto ConverterParaEntidade(SqlDataReader leitor)
+    public override Produto ConverterParaRegistro(IDataReader leitor)
     {
         var produto = new Produto(
             Convert.ToString(leitor["NOME"])!,

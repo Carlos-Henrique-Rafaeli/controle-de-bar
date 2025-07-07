@@ -1,11 +1,16 @@
 ﻿using ControleDeBar.Dominio.ModuloMesa;
 using ControleDeBar.Infraestrutura.SqlServer.Compartilhado;
 using Microsoft.Data.SqlClient;
+using System.Data;
 
 namespace ControleDeBar.Infraestrutura.SqlServer.ModuloMesa;
 
 public class RepositorioMesaEmSql : RepositorioBaseEmSql<Mesa>, IRepositorioMesa
 {
+    public RepositorioMesaEmSql(IDbConnection conexaoComBanco) : base(conexaoComBanco)
+    {
+    }
+
     public override string ObterSqlInserir()
     {
         return @"INSERT INTO [TBMESA] 
@@ -67,15 +72,15 @@ public class RepositorioMesaEmSql : RepositorioBaseEmSql<Mesa>, IRepositorioMesa
 		        [TBMESA]";
     }
 
-    public override void ConfigurarParametros(SqlCommand comando, Mesa registro)
+    public override void ConfigurarParametrosRegistro(IDbCommand comando, Mesa registro)
     {
-        comando.Parameters.AddWithValue("ID", registro.Id);
-        comando.Parameters.AddWithValue("NUMERO", registro.Numero);
-        comando.Parameters.AddWithValue("CAPACIDADE", registro.Capacidade);
-        comando.Parameters.AddWithValue("ESTAOCUPADA", registro.EstaOcupada ? 1 : 0);
+        comando.AdicionarParametro("ID", registro.Id);
+        comando.AdicionarParametro("NUMERO", registro.Numero);
+        comando.AdicionarParametro("CAPACIDADE", registro.Capacidade);
+        comando.AdicionarParametro("ESTAOCUPADA", registro.EstaOcupada ? 1 : 0);
     }
 
-    public override Mesa ConverterParaEntidade(SqlDataReader leitor)
+    public override Mesa ConverterParaRegistro(IDataReader leitor)
     {
         var mesa = new Mesa
         {

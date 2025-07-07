@@ -1,23 +1,27 @@
 ﻿using ControleDeBar.Dominio.Compartilhado;
 using ControleDeBar.Dominio.ModuloConta;
 using Microsoft.Data.SqlClient;
+using System.Data;
 
 namespace ControleDeBar.Infraestrutura.SqlServer.Compartilhado;
 
 public abstract class RepositorioBaseEmSql<T> where T : EntidadeBase<T>
 {
-    private readonly string connectionString =
-        "Data Source=(LocalDB)\\MSSQLLocalDB;Initial Catalog=ControleDeBarDb;Integrated Security=True";
+    protected readonly IDbConnection conexaoComBanco;
+
+    public RepositorioBaseEmSql(IDbConnection conexaoComBanco)
+    {
+        this.conexaoComBanco = conexaoComBanco;
+    }
 
     public void CadastrarRegistro(T novoRegistro)
     {
         var sqlInserir = ObterSqlInserir();
 
-        SqlConnection conexaoComBanco = new SqlConnection(connectionString);
+        var comandoInsercao = conexaoComBanco.CreateCommand();
+        comandoInsercao.CommandText = sqlInserir;
 
-        SqlCommand comandoInsercao = new SqlCommand(sqlInserir, conexaoComBanco);
-
-        ConfigurarParametros(comandoInsercao, novoRegistro);
+        ConfigurarParametrosRegistro(comandoInsercao, novoRegistro);
 
         conexaoComBanco.Open();
 
@@ -30,13 +34,12 @@ public abstract class RepositorioBaseEmSql<T> where T : EntidadeBase<T>
     {
         var sqlEditar = ObterSqlEditar();
 
-        SqlConnection conexaoComBanco = new SqlConnection(connectionString);
-
-        SqlCommand comandoEdicao = new SqlCommand(sqlEditar, conexaoComBanco);
+        var comandoEdicao = conexaoComBanco.CreateCommand();
+        comandoEdicao.CommandText = sqlEditar;
 
         registroEditado.Id = idRegistro;
 
-        ConfigurarParametros(comandoEdicao, registroEditado);
+        ConfigurarParametrosRegistro(comandoEdicao, registroEditado);
 
         conexaoComBanco.Open();
 
@@ -51,11 +54,10 @@ public abstract class RepositorioBaseEmSql<T> where T : EntidadeBase<T>
     {
         var sqlExcluir = ObterSqlExcluir();
 
-        SqlConnection conexaoComBanco = new SqlConnection(connectionString);
+        var comandoExclusao = conexaoComBanco.CreateCommand();
+        comandoExclusao.CommandText = sqlExcluir;
 
-        SqlCommand comandoExclusao = new SqlCommand(sqlExcluir, conexaoComBanco);
-
-        comandoExclusao.Parameters.AddWithValue("ID", idRegistro);
+        comandoExclusao.AdicionarParametro("ID", idRegistro);
 
         conexaoComBanco.Open();
 
@@ -70,21 +72,19 @@ public abstract class RepositorioBaseEmSql<T> where T : EntidadeBase<T>
     {
         var sqlSelecionarPorId = ObterSqlSelecionarPorId();
 
-        SqlConnection conexaoComBanco = new SqlConnection(connectionString);
+        var comandoSelecao = conexaoComBanco.CreateCommand();
+        comandoSelecao.CommandText = sqlSelecionarPorId;
 
-        SqlCommand comandoSelecao =
-            new SqlCommand(sqlSelecionarPorId, conexaoComBanco);
-
-        comandoSelecao.Parameters.AddWithValue("ID", idRegistro);
+        comandoSelecao.AdicionarParametro("ID", idRegistro);
 
         conexaoComBanco.Open();
 
-        SqlDataReader leitor = comandoSelecao.ExecuteReader();
+        var leitor = comandoSelecao.ExecuteReader();
 
         T? registro = null;
 
         if (leitor.Read())
-            registro = ConverterParaEntidade(leitor);
+            registro = ConverterParaRegistro(leitor);
 
         conexaoComBanco.Close();
 
@@ -95,19 +95,18 @@ public abstract class RepositorioBaseEmSql<T> where T : EntidadeBase<T>
     {
         var sqlSelecionarTodos = ObterSqlSelecionarTodos();
 
-        SqlConnection conexaoComBanco = new SqlConnection(connectionString);
+        var comandoSelecao = conexaoComBanco.CreateCommand();
+        comandoSelecao.CommandText = sqlSelecionarTodos;
 
         conexaoComBanco.Open();
 
-        SqlCommand comandoSelecao = new SqlCommand(sqlSelecionarTodos, conexaoComBanco);
-
-        SqlDataReader leitor = comandoSelecao.ExecuteReader();
+        var leitor = comandoSelecao.ExecuteReader();
 
         var contatos = new List<T>();
 
         while (leitor.Read())
         {
-            var contato = ConverterParaEntidade(leitor);
+            var contato = ConverterParaRegistro(leitor);
 
             contatos.Add(contato);
         }
@@ -127,7 +126,7 @@ public abstract class RepositorioBaseEmSql<T> where T : EntidadeBase<T>
     
     public abstract string ObterSqlSelecionarTodos();
     
-    public abstract void ConfigurarParametros(SqlCommand comando, T registro);
+    public abstract void ConfigurarParametrosRegistro(IDbCommand comando, T registro);
     
-    public abstract T ConverterParaEntidade(SqlDataReader leitor);
+    public abstract T ConverterParaRegistro(IDataReader leitor);
 }

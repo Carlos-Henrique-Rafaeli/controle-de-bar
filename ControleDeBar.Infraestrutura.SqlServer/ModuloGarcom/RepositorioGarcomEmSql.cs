@@ -1,11 +1,16 @@
 ﻿using ControleDeBar.Dominio.ModuloGarcom;
 using ControleDeBar.Infraestrutura.SqlServer.Compartilhado;
 using Microsoft.Data.SqlClient;
+using System.Data;
 
 namespace ControleDeBar.Infraestrutura.SqlServer.ModuloGarcom;
 
 public class RepositorioGarcomEmSql : RepositorioBaseEmSql<Garcom>, IRepositorioGarcom
 {
+    public RepositorioGarcomEmSql(IDbConnection conexaoComBanco):base(conexaoComBanco)
+    {
+    }
+
     public override string ObterSqlInserir()
     {
         return @"INSERT INTO [TBGARCOM] 
@@ -62,14 +67,14 @@ public class RepositorioGarcomEmSql : RepositorioBaseEmSql<Garcom>, IRepositorio
 		        [TBGARCOM]";
     }
 
-    public override void ConfigurarParametros(SqlCommand comando, Garcom registro)
+    public override void ConfigurarParametrosRegistro(IDbCommand comando, Garcom registro)
     {
-        comando.Parameters.AddWithValue("ID", registro.Id);
-        comando.Parameters.AddWithValue("NOME", registro.Nome);
-        comando.Parameters.AddWithValue("CPF", registro.CPF);
+        comando.AdicionarParametro("ID", registro.Id);
+        comando.AdicionarParametro("NOME", registro.Nome);
+        comando.AdicionarParametro("CPF", registro.CPF);
     }
 
-    public override Garcom ConverterParaEntidade(SqlDataReader leitor)
+    public override Garcom ConverterParaRegistro(IDataReader leitor)
     {
         var garcom = new Garcom
         {

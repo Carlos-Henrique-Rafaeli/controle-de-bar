@@ -3,7 +3,6 @@ using ControleDeBar.Dominio.ModuloGarcom;
 using ControleDeBar.Dominio.ModuloMesa;
 using ControleDeBar.Dominio.ModuloProduto;
 using Microsoft.Data.SqlClient;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace ControleDeBar.Infraestrutura.SqlServer.ModuloConta;
 

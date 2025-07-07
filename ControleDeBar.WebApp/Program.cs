@@ -10,6 +10,8 @@ using ControleDeBar.Infraestrutura.SqlServer.ModuloMesa;
 using ControleDeBar.Infraestrutura.SqlServer.ModuloProduto;
 using ControleDeBar.WebApp.ActionFilters;
 using ControleDeBar.WebApp.DependencyInjection;
+using Microsoft.Data.SqlClient;
+using System.Data;
 
 namespace ControleDeBar.WebApp;
 
@@ -23,6 +25,13 @@ public class Program
         {
             options.Filters.Add<ValidarModeloAttribute>();
             options.Filters.Add<LogarAcaoAttribute>();
+        });
+
+        builder.Services.AddScoped<IDbConnection>(provider =>
+        {
+            var connectionString = "Data Source=(LocalDB)\\MSSQLLocalDB;Initial Catalog=ControleDeBarDb;Integrated Security=True";
+
+            return new SqlConnection(connectionString);
         });
 
         builder.Services.AddScoped<ContextoDados>((_) => new ContextoDados(true));
